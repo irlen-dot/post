@@ -1,7 +1,7 @@
 import { IsEmail, Length } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import { IsEmailAlreadyExist } from "../validate/validate";
-
+import { IsEmailAlreadyExist } from "../validate/validateEmail";
+import { IsUsernameAlreadyExist } from "../validate/validateUsername";
 
 @InputType()
 export class UserInput {
@@ -20,6 +20,10 @@ export class UserInput {
 
     @Field()
     password!: string;
+
+    @Field()
+    @IsUsernameAlreadyExist({ message: "username is already in use"})
+    username!: string;
 
 
     

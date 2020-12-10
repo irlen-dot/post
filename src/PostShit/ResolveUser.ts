@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getRepository } from "typeorm";
+import { MyContext } from "../context/MyContext";
 import { UserInput } from "../inputType/inputUser";
 import { User } from "../User/user";
 
@@ -34,15 +35,14 @@ export class UserResolver {
     // }
 
     @Mutation(() => User)
-    async register(@Arg("UserData") singleParametr: UserInput
-    ): Promise<User | void> {
+    async register(@Arg("UserData") singleParametr: UserInput): Promise<User | void> {
         const returnUser = new User();
         returnUser.firstName = singleParametr.firstName;
         returnUser.lastName = singleParametr.lastName;
         returnUser.email = singleParametr.email;
         // const hashedPassword = bcrypt.hash(singleParametr.password, 12)
         returnUser.password = await bcrypt.hash(singleParametr.password, 12);
-        returnUser.username = `${singleParametr.firstName} ${singleParametr.lastName}`
+        returnUser.username = singleParametr.username;
         const userRep = await getRepository(User);
         userRep.save(returnUser);
         return returnUser;

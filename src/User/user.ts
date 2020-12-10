@@ -22,10 +22,6 @@ export class User extends BaseEntity {
     @Column("text", { unique: true })
     email!: string;
 
-    @Field()
-    @Column()
-    isActive?: boolean;
-
     // @Field()
     @Column()
     password!: string;
