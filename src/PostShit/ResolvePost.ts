@@ -37,13 +37,15 @@ export class PostResolver {
         
         returnPost.comments = singleParametr.comments;
         returnPost.likes = singleParametr.likes;
-        returnPost.id = singleParametr.id;
+        // returnPost.id = singleParametr.id;
         returnPost.isActive = singleParametr.isActive;
 
         const postRep = await getRepository(PostObjectType);
         postRep.save(returnPost);
         return returnPost;
     }
+
+    
 
 
 }

@@ -1,57 +1,63 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { User } from "../User/user";
-import bcrypt from "bcryptjs";
+
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { getRepository } from "typeorm";
 import { LoginInput } from "../inputType/LoginInput";
-import { MyContext } from "../context/MyContext";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { User } from "../User/user";
 
 @Resolver()
-export class LoginResolver {
-    @Mutation(() => User, { nullable: true })
-    async Login(
-        @Arg("LoginData") singleParametr: LoginInput,
-        @Ctx() ctx: MyContext
-        ): Promise< String | null | undefined > {
-        const EmailShit = singleParametr.email;
-        const usernameShit = singleParametr.username;
-        const passwordShit = singleParametr.password;
-        const userEmail = await User.findOne({ where: { EmailShit } });
-        const UserUsername = await User.findOne({ where: { usernameShit } })
+export class CheckLogin {
+   
+   
+
+    // @Query(() => User)
+    // async LoginCheck(): Promise < User | null | void > {
+    //     const TheUser = await getRepository(User);
         
+
+    //     return TheUser.findOne({username:"rere" });
+    //     }
+
+
+    @Mutation(() => User)
+    async Login(@Arg("LoginData") theParametr: LoginInput): Promise < User | null | void > {
         
-        if (!userEmail && !UserUsername) {
-            return null;
-        }
-        
-        if (userEmail === undefined) {
-            const validPassword = await bcrypt.compare( passwordShit, UserUsername!.password )
-            if (!validPassword) {
+            const TheUser = await getRepository(User);
+            const TheEmail = theParametr.email;
+            // const emailOrUsername
+            const TheUsername = theParametr.username;
+            const ThePassword = theParametr.password;
+            
+            const EmailFind = await TheUser.findOne({ where: {email: TheEmail} });
+            const UsernameFind = await TheUser.findOne({ where: {username: TheUsername }});       
+            
+            console.log('EmailFind', EmailFind);
+            console.log('UsernameFind', UsernameFind);
+
+            if(!EmailFind && !UsernameFind){
                 return null;
             }
-            else {
-                // ctx.req.session!.userId = UserUsername!.id;
-                const UserToken = jwt.sign({ user: UserUsername }, "secretkey");
-                // return UserUsername;
-                return UserToken;
+
+            if (EmailFind) {
+                const PasswordMatch = await bcrypt.compare(ThePassword, EmailFind!.password);
+                if(!PasswordMatch) {
+                    return null;
+                }
+                else {
+                    return EmailFind;
+                }
+            
+                
+            }
+
+            if (UsernameFind) {
+                const PasswordMatch = await bcrypt.compare(ThePassword, UsernameFind!.password);
+                if(!PasswordMatch) {
+                    return null;
+                }
+                else {
+                    return UsernameFind;
+                }
             }
         }
-
-        if (UserUsername === undefined) {
-            const validPassword = await bcrypt.compare( passwordShit, userEmail!.password )
-            if (!validPassword) {
-                return null;
-            }
-            else {
-                const UserToken = jwt.sign({ user: userEmail }, "secretkey");
-                return UserToken;
-            }
-        }
-
-        
-    }
 }
-
-
-
-
-

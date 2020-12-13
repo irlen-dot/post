@@ -1,5 +1,7 @@
+import { ReplaceFieldWithFragment } from "apollo-server";
 import { Field, ID, ObjectType, Root } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PostObjectType } from "../entity/ObjectPost";
 
 
 @Entity()
@@ -7,8 +9,8 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class User extends BaseEntity {
 
     @Field(() => ID)
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @PrimaryGeneratedColumn("uuid")
+    id!: string;
 
     @Field()
     @Column()
@@ -30,8 +32,20 @@ export class User extends BaseEntity {
     // username(@Root() parent: User): String {
     //     return `${parent.firstName} . ${parent.lastName}`
     // }
-
+    @Field()
     @Column()
     username!: string;
+
+    @Field(()=>[PostObjectType])
+    @OneToMany('PostObjectType', (post: PostObjectType) => post.user, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    })
+    posts?: Array<PostObjectType>
+
+
+    @Field()
+    @Column({ nullable: true })
+    token!: string;
 }
 

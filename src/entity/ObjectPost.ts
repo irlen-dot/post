@@ -1,11 +1,13 @@
 import { ObjectType, ID, Field } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../User/user";
+import {  } from "module";
  
 @Entity()
 @ObjectType()
 export class PostObjectType extends BaseEntity {
     @Field(() => ID)
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id!: number;
  
     @Field()
@@ -24,4 +26,12 @@ export class PostObjectType extends BaseEntity {
     @Field()
     @Column()
     isActive!: boolean;
+
+    @Column({ nullable: true })
+    @ManyToOne('User', (user: User) => user.id)
+    ownerId?: string;
+
+    @Column({ nullable: true })
+    @ManyToOne('User', (user: User) => user.posts)
+    user?: string;
 }

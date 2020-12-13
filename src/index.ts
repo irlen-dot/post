@@ -7,6 +7,7 @@ import { PostObjectType } from "./entity/ObjectPost";
 import { UserResolver } from "./PostShit/ResolveUser";
 import { User } from "./User/user";
 import Express from "express";
+import { CheckLogin } from "./login/CheckLogin";
 
 const PORT = process.env.PORT || 4040;
 
@@ -28,7 +29,7 @@ async function Bootstrap() {
     const app = Express();
 
     const schema = await buildSchema({
-        resolvers: [PostResolver, UserResolver],
+        resolvers: [PostResolver, UserResolver, CheckLogin],
     });
 
     const production = process.env.NODE_ENV === "production"
@@ -39,11 +40,9 @@ async function Bootstrap() {
         context: ({ req }: any) => ({ req })
     });
 
-    app.use((req, res) => {
-        const userIntoToken = 
-    });
+    
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log("Server started, bitch");
     });
 

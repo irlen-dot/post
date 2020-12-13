@@ -1,11 +1,12 @@
 import bcrypt from "bcryptjs";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { getRepository } from "typeorm";
-import { MyContext } from "../context/MyContext";
+// import { MyContext } from "../context/MyContext";
 import { UserInput } from "../inputType/inputUser";
 import { User } from "../User/user";
-
-
+import { PrivateKey, PublicKey } from "../token/keys";
+import { SignOption } from "../token/signOption";
+import * as jwt  from "jsonwebtoken";
 
 @Resolver()
 export class UserResolver {
@@ -34,18 +35,27 @@ export class UserResolver {
     //     return user;
     // }
 
-    @Mutation(() => User)
-    async register(@Arg("UserData") singleParametr: UserInput): Promise<User | void> {
+    @Mutation(() => String)
+    async register(@Arg("UserData") singleParametr: UserInput): Promise<String | void > {
+        
         const returnUser = new User();
         returnUser.firstName = singleParametr.firstName;
         returnUser.lastName = singleParametr.lastName;
         returnUser.email = singleParametr.email;
-        // const hashedPassword = bcrypt.hash(singleParametr.password, 12)
+        
         returnUser.password = await bcrypt.hash(singleParametr.password, 12);
         returnUser.username = singleParametr.username;
-        const userRep = await getRepository(User);
-        userRep.save(returnUser);
-        return returnUser;
+        await returnUser.save();
+        const tokenUser = jwt.sign({
+                id: returnUser.id,
+                firstName: returnUser.firstName,
+                lastName: returnUser.lastName,
+                email: returnUser.email,
+                username: returnUser.username,
+        }, PrivateKey, SignOption);
+        returnUser.token = tokenUser;
+        await returnUser.save();
+        return tokenUser;
     }
 
 
