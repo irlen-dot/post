@@ -1,53 +1,49 @@
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { PostResolver } from "./PostShit/ResolvePost";
+import { PostResolver } from "./Reolvers/ResolvePost";
 import { ApolloServer } from "apollo-server";
 import { createConnection } from "typeorm";
-import { PostObjectType } from "./entity/ObjectPost";
-import { UserResolver } from "./PostShit/ResolveUser";
-import { User } from "./User/user";
+import { PostObjectType } from "./types/entity/ObjectPost";
+import { UserResolver } from "./Reolvers/ResolveUser";
+import { User } from "./types/User/user";
 import Express from "express";
-import { CheckLogin } from "./login/CheckLogin";
+import { CheckLogin } from "./Reolvers/CheckLogin";
+import { json } from "body-parser";
 
 const PORT = process.env.PORT || 4040;
 
 async function Bootstrap() {
+  const connectionPost = await createConnection({
+    name: "default",
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "hellomik",
+    password: "2106",
+    database: "posts",
+    synchronize: true,
+    logging: true,
+    entities: [PostObjectType, User],
+  });
 
-    const connectionPost = await createConnection({
-        "name": "default",
-        "type": "postgres",
-        "host": "localhost",
-        "port": 5432,
-        "username": "irlenturlykhanov",
-        "password": "1234",
-        "database": "posts",
-        "synchronize": true,
-        "logging": true,
-        "entities": [PostObjectType, User]
-    });
+  const schema = await buildSchema({
+    resolvers: [PostResolver, UserResolver, CheckLogin],
+  });
 
-    const app = Express();
+  const production = process.env.NODE_ENV === "production";
 
-    const schema = await buildSchema({
-        resolvers: [PostResolver, UserResolver, CheckLogin],
-    });
+  const server = new ApolloServer({
+    schema: schema,
+    playground: true,
+    context: ({ req }: any) => ({ req }),
+  });
 
-    const production = process.env.NODE_ENV === "production"
+  server.listen(PORT, () => {
+    console.log("Server started, bitch");
+  });
 
-    const server = new ApolloServer({
-        schema: schema,
-        playground: true,
-        context: ({ req }: any) => ({ req })
-    });
-
-    
-
-    server.listen(PORT, () => {
-        console.log("Server started, bitch");
-    });
-
-    // const serverInfo = await server.listen(PORT);
-    // console.log("SERVEER STARTED");
+  // const serverInfo = await server.listen(PORT);
+  // console.log("SERVEER STARTED");
 }
 
-Bootstrap() 
+Bootstrap();

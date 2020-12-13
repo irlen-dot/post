@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
-import { User } from "../User/user";
+import { User } from "../types/User/user";
 // import { PostObjectType } from "../entity/ObjectPost";
  
  

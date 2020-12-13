@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "type-graphql";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { User } from "../User/user";
-import { PostObjectType } from "../entity/ObjectPost";
+import { PostObjectType } from "./ObjectPost";
 
 @Entity()
 @ObjectType()

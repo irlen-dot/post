@@ -2,10 +2,10 @@ import bcrypt from "bcryptjs";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { getRepository } from "typeorm";
 // import { MyContext } from "../context/MyContext";
-import { UserInput } from "../inputType/inputUser";
-import { User } from "../User/user";
-import { PrivateKey, PublicKey } from "../token/keys";
-import { SignOption } from "../token/signOption";
+import { UserInput } from "../types/inputType/inputUser";
+import { User } from "../types/User/user";
+import { PrivateKey, PublicKey } from "../utilites/token/keys";
+import { SignOption } from "../utilites/token/signOption";
 import * as jwt  from "jsonwebtoken";
 
 @Resolver()

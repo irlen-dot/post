@@ -1,9 +1,9 @@
 
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { getRepository } from "typeorm";
-import { LoginInput } from "../inputType/LoginInput";
+import { LoginInput } from "../types/inputType/LoginInput";
 import bcrypt from "bcryptjs";
-import { User } from "../User/user";
+import { User } from "../types/User/user";
 
 @Resolver()
 export class CheckLogin {
