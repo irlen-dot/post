@@ -1,5 +1,5 @@
 
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getRepository } from "typeorm";
 import { LoginInput } from "../types/inputType/LoginInput";
 import bcrypt from "bcryptjs";
@@ -20,6 +20,7 @@ export class CheckLogin {
 
 
     @Mutation(() => User)
+    // @UseMiddleware(LogAccess)
     async Login(@Arg("LoginData") theParametr: LoginInput): Promise < User | null | void > {
         
             const TheUser = await getRepository(User);
@@ -35,7 +36,7 @@ export class CheckLogin {
             console.log('UsernameFind', UsernameFind);
 
             if(!EmailFind && !UsernameFind){
-                return null;
+                return  null; 
             }
 
             if (EmailFind) {

@@ -25,7 +25,7 @@ export class User extends BaseEntity {
     email!: string;
 
     // @Field()
-    @Column()
+    @Column() 
     password!: string;
 
     // @Field()
@@ -36,12 +36,9 @@ export class User extends BaseEntity {
     @Column()
     username!: string;
 
-    @Field(()=>[PostObjectType])
-    @OneToMany('PostObjectType', (post: PostObjectType) => post.user, {
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-    })
-    posts?: Array<PostObjectType>
+    // @Field(()=>[PostObjectType])
+    // @OneToMany('PostObjectType', (post: PostObjectType) => post.user)
+    // posts?: PostObjectType[];
 
 
     @Field()

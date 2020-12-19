@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getRepository } from "typeorm";
 // import { MyContext } from "../context/MyContext";
 import { UserInput } from "../types/inputType/inputUser";
@@ -7,9 +7,11 @@ import { User } from "../types/User/user";
 import { PrivateKey, PublicKey } from "../utilites/token/keys";
 import { SignOption } from "../utilites/token/signOption";
 import * as jwt  from "jsonwebtoken";
+import { isAuth } from "../middleware/checkInput";
 
 @Resolver()
 export class UserResolver {
+    @UseMiddleware(isAuth)
     @Query(() => String)
     async HelloBitch() {
         return "HiBitch";

@@ -6,9 +6,12 @@ import { createConnection } from "typeorm";
 import { PostObjectType } from "./types/entity/ObjectPost";
 import { UserResolver } from "./Reolvers/ResolveUser";
 import { User } from "./types/User/user";
-import Express from "express";
+// import Express from "express";
 import { CheckLogin } from "./Reolvers/CheckLogin";
-import { json } from "body-parser";
+// import { json } from "body-parser";
+import { ResolveComment } from "./Reolvers/ResolveComment";
+import { ObjectComment } from "./types/entity/ObjectComment";
+import { isAuth } from "./middleware/checkInput";
 
 const PORT = process.env.PORT || 4040;
 
@@ -18,16 +21,17 @@ async function Bootstrap() {
     type: "postgres",
     host: "localhost",
     port: 5432,
-    username: "hellomik",
-    password: "2106",
+    username: "irlenturlykhanov",
+    password: "1234",
     database: "posts",
     synchronize: true,
     logging: true,
-    entities: [PostObjectType, User],
+    entities: [PostObjectType, User, ObjectComment],
   });
 
   const schema = await buildSchema({
-    resolvers: [PostResolver, UserResolver, CheckLogin],
+    resolvers: [PostResolver, UserResolver, CheckLogin, ResolveComment],
+    globalMiddlewares:[isAuth]
   });
 
   const production = process.env.NODE_ENV === "production";
