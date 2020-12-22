@@ -36,9 +36,9 @@ export class User extends BaseEntity {
     @Column()
     username!: string;
 
-    // @Field(()=>[PostObjectType])
-    // @OneToMany('PostObjectType', (post: PostObjectType) => post.user)
-    // posts?: PostObjectType[];
+    @Field(()=>[PostObjectType])
+    @OneToMany('PostObjectType', (post: PostObjectType) => post.user)
+    posts?: PostObjectType[];
 
 
     @Field()

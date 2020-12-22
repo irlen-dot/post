@@ -12,6 +12,8 @@ import { CheckLogin } from "./Reolvers/CheckLogin";
 import { ResolveComment } from "./Reolvers/ResolveComment";
 import { ObjectComment } from "./types/entity/ObjectComment";
 import { isAuth } from "./middleware/checkInput";
+import * as jwt from "jsonwebtoken";
+
 
 const PORT = process.env.PORT || 4040;
 
@@ -39,7 +41,15 @@ async function Bootstrap() {
   const server = new ApolloServer({
     schema: schema,
     playground: true,
-    context: ({ req }: any) => ({ req }),
+    context: ({ req }) => {
+      const token = req.headers.authorization || '';
+
+      const user = jwt.decode(token)
+
+      if (!user) throw new Error('you must be logged in'); 
+
+      return { user };
+    },
   });
 
   server.listen(PORT, () => {

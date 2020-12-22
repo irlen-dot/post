@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   // Args,
   Mutation,
   Query,
@@ -8,19 +9,21 @@ import {
   // UseMiddleware,
 } from "type-graphql";
 import { PostObjectType } from "../types/entity/ObjectPost";
-
+import * as jwt from "jsonwebtoken";
 import { CreatePostInput } from "../types/inputType/InputPost";
 import { getRepository } from "typeorm";
 
+
 // import { LogAccess } from "../middleware/checkInput";
 
-import { InputComment } from "../types/inputType/InputComment";
+
 import { isAuth } from "../middleware/checkInput";
+import { MyContext } from "../types/context/MyContext";
 
 @Resolver()
 export class PostResolver {
   @Query(() => String)
-  async HelloBitch() {
+  async HelloBitch():Promise<string> {
     return "HiBitch";
   }
 
@@ -28,10 +31,12 @@ export class PostResolver {
   @Mutation(() => PostObjectType, { name: "createPostByInput", nullable: true })
   // @UseMiddleware(LogAccess)
   async saas(
-    @Arg("singleParametr") singleParametr: CreatePostInput
+    @Arg("singleParametr") singleParametr: CreatePostInput,
+    
   ): Promise<PostObjectType | null> {
     const returnPost = new PostObjectType();
     returnPost.description = singleParametr.description;
+    
     
     // returnPost.comments = singleParametr.comments;
     // returnPost.likes = singleParametr.likes;
@@ -40,8 +45,9 @@ export class PostResolver {
 
     const postRep = await getRepository(PostObjectType);
     // const CommentPost = await postRep.find({ relations: [comments] });
-   
-
+    
+    
+    
     await postRep.save(returnPost);
     return returnPost;
     

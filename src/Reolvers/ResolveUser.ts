@@ -12,7 +12,7 @@ import { isAuth } from "../middleware/checkInput";
 @Resolver()
 export class UserResolver {
     @UseMiddleware(isAuth)
-    @Query(() => String)
+    @Query(()=> String)
     async HelloBitch() {
         return "HiBitch";
     }
@@ -37,7 +37,7 @@ export class UserResolver {
     //     return user;
     // }
 
-    @Mutation(() => String)
+    @Mutation()
     async register(@Arg("UserData") singleParametr: UserInput): Promise<String | void > {
         
         const returnUser = new User();

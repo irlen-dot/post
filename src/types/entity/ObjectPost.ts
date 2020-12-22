@@ -6,17 +6,18 @@ import { ObjectComment } from "./ObjectComment";
 @Entity()
 @ObjectType()
 export class PostObjectType extends BaseEntity {
+    
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
-    id!: Number;
+    id!: String;
   
     @Field()
     @Column({type: "text"})
     description!: string;
   
-    // @Field(() => ID)
-    // @OneToMany(() => ObjectComment, comments => comments.CommentId)
-    // comments?: String[];
+
+    @OneToMany(() => ObjectComment, (comments: ObjectComment) => comments.CommentId)
+    comments!: ObjectComment[];
   
     @Field()
     @Column()
@@ -27,11 +28,12 @@ export class PostObjectType extends BaseEntity {
     @Column()
     isActive!: boolean;
   
-    // @Column({ nullable: true })
-    // @ManyToOne('User', (user: User) => user.id)
-    // ownerId?: string;
+    @Column({ nullable: true })
+    @ManyToOne('User', (user: User) => user.id)
+    ownerId?: string;
     
-    // @Column({ nullable: true })
-    // @ManyToOne('User', (user: User) => user.posts)
-    // user?: string;
+    @Column({ nullable: true })
+    @ManyToOne('User', (user: User) => user.posts)
+    user?: string;
+    
 }
