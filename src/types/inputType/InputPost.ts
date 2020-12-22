@@ -1,12 +1,9 @@
-import { Field, InputType } from "type-graphql";
+import { ArgsType, Field, InputType } from "type-graphql";
 // import { PrimaryGeneratedColumn } from "typeorm";
 
 // @Entity()
-@InputType()
+@ArgsType()
 export class CreatePostInput {
-    
-    @Field()
-    description!: string;
-
-    
+  @Field()
+  description!: string;
 }

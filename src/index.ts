@@ -1,19 +1,19 @@
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { PostResolver } from "./Reolvers/ResolvePost";
+
 import { ApolloServer } from "apollo-server";
 import { createConnection } from "typeorm";
 import { PostObjectType } from "./types/entity/ObjectPost";
-import { UserResolver } from "./Reolvers/ResolveUser";
+import { UserResolver } from "./Reolvers/UserResolver";
 import { User } from "./types/User/user";
-// import Express from "express";
-import { CheckLogin } from "./Reolvers/CheckLogin";
-// import { json } from "body-parser";
-import { ResolveComment } from "./Reolvers/ResolveComment";
+
+import { AuthorizationReolver } from "./Reolvers/AuthorizationReolver";
+
 import { ObjectComment } from "./types/entity/ObjectComment";
 import { isAuth } from "./middleware/checkInput";
 import * as jwt from "jsonwebtoken";
-
+import { PostResolver } from "./Reolvers/PostResolver";
+import { TestResolver } from "./Reolvers/TestReolver";
 
 const PORT = process.env.PORT || 4040;
 
@@ -23,8 +23,8 @@ async function Bootstrap() {
     type: "postgres",
     host: "localhost",
     port: 5432,
-    username: "irlenturlykhanov",
-    password: "1234",
+    username: "hellomik",
+    password: "2106",
     database: "posts",
     synchronize: true,
     logging: true,
@@ -32,8 +32,8 @@ async function Bootstrap() {
   });
 
   const schema = await buildSchema({
-    resolvers: [PostResolver, UserResolver, CheckLogin, ResolveComment],
-    globalMiddlewares:[isAuth]
+    resolvers: [TestResolver, UserResolver, AuthorizationReolver, PostResolver],
+    globalMiddlewares: [isAuth],
   });
 
   const production = process.env.NODE_ENV === "production";
@@ -41,15 +41,15 @@ async function Bootstrap() {
   const server = new ApolloServer({
     schema: schema,
     playground: true,
-    context: ({ req }) => {
-      const token = req.headers.authorization || '';
+    // context: ({ req }) => {
+    //   const token = req.headers.authorization || "";
 
-      const user = jwt.decode(token)
+    //   const user = jwt.decode(token);
 
-      if (!user) throw new Error('you must be logged in'); 
+    //   if (!user) throw new Error("you must be logged in");
 
-      return { user };
-    },
+    //   return { user };
+    // },
   });
 
   server.listen(PORT, () => {
