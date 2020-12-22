@@ -24,20 +24,12 @@ export class PostObjectType extends BaseEntity {
   @Column({ type: "text" })
   description!: string;
 
-  @OneToMany(
-    () => ObjectComment,
-    (comments: ObjectComment) => comments.CommentId
-  )
+  @OneToMany(() => ObjectComment, (comments: ObjectComment) => comments.post)
   comments!: ObjectComment[];
-
-  // @Field()
-  // @Column()
-  // likes?: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   isActive?: boolean;
-
 
   // @Column({ nullable: true })
   // @ManyToOne(() => User, (user: User) => user.posts)

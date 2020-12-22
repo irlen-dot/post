@@ -14,6 +14,8 @@ import { isAuth } from "./middleware/checkInput";
 import * as jwt from "jsonwebtoken";
 import { PostResolver } from "./Reolvers/PostResolver";
 import { TestResolver } from "./Reolvers/TestReolver";
+import { Command } from "ioredis";
+import { CommentsReolver } from "./Reolvers/CommentResolver";
 
 const PORT = process.env.PORT || 4040;
 
@@ -32,7 +34,13 @@ async function Bootstrap() {
   });
 
   const schema = await buildSchema({
-    resolvers: [TestResolver, UserResolver, AuthorizationReolver, PostResolver],
+    resolvers: [
+      TestResolver,
+      CommentsReolver,
+      UserResolver,
+      AuthorizationReolver,
+      PostResolver,
+    ],
     globalMiddlewares: [isAuth],
   });
 

@@ -16,29 +16,21 @@ import { PostObjectType } from "./ObjectPost";
 @Entity("comment")
 @ObjectType()
 export class ObjectComment extends BaseEntity {
-  @Field(() => PostObjectType)
+  @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
-  @ManyToOne(
-    () => PostObjectType,
-    (commentId: PostObjectType) => commentId.comments
-  )
-  @JoinColumn()
-  CommentId!: PostObjectType;
-
-  @Field()
-  @ManyToOne("User", (user: User) => user.username)
-  user!: string;
+  id!: string;
 
   @Field()
   @Column()
   body!: string;
 
-  // @Field()
-  // @ManyToOne('User', (user: User) => user.id)
-  // @JoinTable()
-  // ownerId!: string;
-
   @Field(() => PostObjectType)
-  @ManyToOne(() => PostObjectType, (post: PostObjectType) => post.id)
-  PostId!: PostObjectType;
+  @ManyToOne(() => PostObjectType, (post: PostObjectType) => post.comments)
+  post?: PostObjectType;
+
+  constructor(body?: string, post?: PostObjectType) {
+    super();
+    this.body = body || "";
+    this.post = post;
+  }
 }

@@ -3,7 +3,10 @@ import { ArgsType, Field, InputType } from "type-graphql";
 
 // @Entity()
 @ArgsType()
-export class CreatePostArgsType {
+export class CreateCommentArgsType {
   @Field()
   description!: string;
+
+  @Field()
+  postId!: string;
 }
