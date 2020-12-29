@@ -1,15 +1,20 @@
-import { ReplaceFieldWithFragment } from "apollo-server";
 import { Field, ID, ObjectType, Root } from "type-graphql";
 import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PostObjectType } from "../entity/ObjectPost";
+import { followers } from "../entity/ObjectFollowers";
+import { ObjectPost } from "../entity/ObjectPost";
 
-@Entity()
+
+
+@Entity("users")
 @ObjectType()
 export class User extends BaseEntity {
   @Field(() => ID)
@@ -30,7 +35,7 @@ export class User extends BaseEntity {
 
   // @Field()
   @Column()
-  password!: string;
+  password!: string;  
 
   @Field()
   @Column()
@@ -39,4 +44,26 @@ export class User extends BaseEntity {
   @Field()
   @Column({ nullable: true })
   token!: string;
+
+  @OneToMany(() => ObjectPost, (post: ObjectPost) => post.user)
+  @JoinColumn()
+  post!: ObjectPost[];
+
+  // @Field({ nullable: true })
+  // @Column({ nullable: true })
+  // followers?: Number;
+
+  // @ManyToMany(() => User)
+  // @JoinTable()
+  // followersInfo?: User[];
+
+  @OneToMany(() => followers, fol => fol.userId_2)
+  followers!: followers[];
+
+  @Column({ nullable: true })
+  follower_num?: Number;  
+
+  // @Column({nullable: true})
+  // followed_info?: String[];
+  
 }

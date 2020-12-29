@@ -5,5 +5,9 @@ import { ArgsType, Field, InputType } from "type-graphql";
 @ArgsType()
 export class CreatePostInput {
   @Field()
+  ownerId!: string;
+
+
+  @Field()
   description!: string;
 }

@@ -11,26 +11,21 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "../User/user";
-import { PostObjectType } from "./ObjectPost";
+import { ObjectPost } from "./ObjectPost";
 
-@Entity("comment")
+@Entity("comments")
 @ObjectType()
 export class ObjectComment extends BaseEntity {
-  @Field(() => PostObjectType)
+  @Field(() => ObjectPost)
   @PrimaryGeneratedColumn("uuid")
-  @ManyToOne(
-    () => PostObjectType,
-    (commentId: PostObjectType) => commentId.comments
-  )
-  @JoinColumn()
-  CommentId!: PostObjectType;
+  id!: ObjectPost;
+
+  // @Field()
+  // @ManyToOne("User", (user: User) => user.username)
+  // user!: string;
 
   @Field()
-  @ManyToOne("User", (user: User) => user.username)
-  user!: string;
-
-  @Field()
-  @Column()
+  @Column({ nullable: true })
   body!: string;
 
   // @Field()
@@ -38,7 +33,13 @@ export class ObjectComment extends BaseEntity {
   // @JoinTable()
   // ownerId!: string;
 
-  @Field(() => PostObjectType)
-  @ManyToOne(() => PostObjectType, (post: PostObjectType) => post.id)
-  PostId!: PostObjectType;
+  @Field(() => ObjectPost)
+  @ManyToOne(() => ObjectPost, (post: ObjectPost) => post.id)
+  PostId!: ObjectPost;
+
+  constructor(body?: string, post?: ObjectPost) {
+    super();
+    this.body = body!;
+    this.PostId = post!;
+  } 
 }

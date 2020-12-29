@@ -1,8 +1,10 @@
-import { Query, Resolver } from "type-graphql";
+import { Query, Resolver, UseMiddleware } from "type-graphql";
+import { checkUser } from "../Middleware/middleware";
 
 @Resolver()
 export class TestResolver {
-  @Query(() => String)
+  @UseMiddleware(checkUser)
+  @Query(() => String, { nullable: true })
   async helloWorld(): Promise<string> {
     return "Hello World!";
   }

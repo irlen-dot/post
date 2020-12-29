@@ -13,11 +13,12 @@ import {
 import { User } from "../User/user";
 import { ObjectComment } from "./ObjectComment";
 
-@Entity("post")
+@Entity("Posts")
 @ObjectType()
-export class PostObjectType extends BaseEntity {
+export class ObjectPost extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
+  // @OneToMany(() => ObjectComment, (com: ObjectComment) => com.PostId)
   id!: String;
 
   @Field()
@@ -26,8 +27,9 @@ export class PostObjectType extends BaseEntity {
 
   @OneToMany(
     () => ObjectComment,
-    (comments: ObjectComment) => comments.CommentId
+    (comments: ObjectComment) => comments.id
   )
+  @JoinColumn()
   comments!: ObjectComment[];
 
   // @Field()
@@ -38,8 +40,18 @@ export class PostObjectType extends BaseEntity {
   @Column({ nullable: true })
   isActive?: boolean;
 
+  @Field()
+  @ManyToOne(() => User, (user: User) => user.post)
+  @JoinColumn()
+  user!: String;
 
-  // @Column({ nullable: true })
-  // @ManyToOne(() => User, (user: User) => user.posts)
-  // user?: string;
+  @Field()
+  @Column({ nullable: true})
+  username!: String;
+
+  constructor(description?: string, user?: String) {
+    super()
+    this.description = description!;
+    this.user = user!;
+  }
 }
